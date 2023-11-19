@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Console\Services\GuardianService;
 use App\Console\Services\NewsAPIService;
 use App\Console\Services\NewsUpdaterInterface;
+use App\Console\Services\NYTimesService;
 use Illuminate\Console\Command;
 
 class UpdateNews extends Command
@@ -26,7 +27,7 @@ class UpdateNews extends Command
     /**
      * Execute the console command.
      */
-    public function handle(GuardianService $newsUpdater)
+    public function handle(NYTimesService $newsUpdater)
     {
 		$news = $newsUpdater->update();
 		dd($news);
