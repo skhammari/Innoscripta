@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Console\Services\GuardianService;
 use App\Console\Services\NewsAPIService;
+use App\Console\Services\NewsUpdaterInterface;
 use Illuminate\Console\Command;
 
 class UpdateNews extends Command
@@ -24,9 +26,9 @@ class UpdateNews extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(GuardianService $newsUpdater)
     {
-        $newsAPI = new NewsAPIService();
-		dd($newsAPI->update());
+		$news = $newsUpdater->update();
+		dd($news);
     }
 }
