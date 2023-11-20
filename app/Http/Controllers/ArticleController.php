@@ -1,65 +1,53 @@
 <?php
 
-namespace App\Http\Controllers;
+	namespace App\Http\Controllers;
 
-use App\Models\Article;
-use Illuminate\Http\Request;
+	use App\Http\Resources\ArticleCollection;
+	use App\Models\Article;
+	use Illuminate\Http\Request;
 
-class ArticleController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+	class ArticleController extends Controller
+	{
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+		public function index()
+		{
+			$allArticles = Article::all();
+			return new ArticleCollection($allArticles);
+		}
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+		public function search(Request $request)
+		{
+			$articleQuery = Article::query();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Article $article)
-    {
-        //
-    }
+			// search by title
+			if ($request->has('title')) {
+				$articleQuery->where('title', 'like', '%' . $request->title . '%');
+			}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Article $article)
-    {
-        //
-    }
+			// filter by date
+			if ($request->has('begin_date') && $request->has('end_date')) {
+				$articleQuery->whereBetween('publishedAt', [$request->begin_date, $request->end_date]);
+			}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Article $article)
-    {
-        //
-    }
+			// filter by category
+			if ($request->has('category')) {
+				$articleQuery->where('category', $request->category);
+			}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Article $article)
-    {
-        //
-    }
-}
+			// filter by source
+			if ($request->has('source')) {
+				$articleQuery->where('sourceName', $request->source);
+			}
+
+			// user preferences: authors, categories, sources
+			$filters = ['authors', 'categories', 'sources'];
+			foreach ($filters as $filter) {
+				if ($request->has($filter)) {
+					$articleQuery->whereIn($filter, $request->{$filter});
+				}
+			}
+
+			return new ArticleCollection($articleQuery->paginate(10));
+		}
+
+	}
