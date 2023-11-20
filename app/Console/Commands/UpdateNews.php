@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\NewsAPIService;
 use App\Services\NYTimesService;
 use Illuminate\Console\Command;
 
@@ -24,7 +25,7 @@ class UpdateNews extends Command
     /**
      * Execute the console command.
      */
-    public function handle(NYTimesService $newsUpdater)
+    public function handle(NewsAPIService $newsUpdater)
     {
 		$news = $newsUpdater->update();
 		dd($news);
