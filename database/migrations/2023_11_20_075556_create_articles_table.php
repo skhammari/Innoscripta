@@ -14,15 +14,15 @@
 				$table->id();
 				$table->string('uniqueId')->unique();
 				$table->string('title');
-				$table->string('content');
-				$table->string('description');
-				$table->string('url');
-				$table->string('image');
+				$table->text('content')->nullable();
+				$table->text('description')->nullable();
+				$table->text('url')->nullable();
+				$table->text('image')->nullable();
 				$table->string('sourceName');
 				$table->string('sourceId');
-				$table->string('author');
+				$table->string('author')->nullable();
 				$table->string('category');
-				$table->string('publishedAt');
+				$table->dateTime('publishedAt');
 				$table->timestamps();
 			});
 		}

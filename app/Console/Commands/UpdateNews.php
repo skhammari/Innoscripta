@@ -1,34 +1,65 @@
 <?php
 
-namespace App\Console\Commands;
+	namespace App\Console\Commands;
 
-use App\Services\GuardianService;
-use App\Services\NewsAPIService;
-use App\Services\NYTimesService;
-use Illuminate\Console\Command;
+	use App\DTO\ArticlesDTO;
+	use App\Enums\ArticleCategoriesEnum;
+	use App\Models\Article;
+	use Illuminate\Console\Command;
 
-class UpdateNews extends Command
-{
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'update:news';
+	class UpdateNews extends Command
+	{
+		/**
+		 * The name and signature of the console command.
+		 *
+		 * @var string
+		 */
+		protected $signature = 'update:news';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+		/**
+		 * The console command description.
+		 *
+		 * @var string
+		 */
+		protected $description = 'Command description';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle(NYTimesService $newsUpdater)
-    {
-		$news = $newsUpdater->update();
-		dd($news);
-    }
-}
+		/**
+		 * Execute the console command.
+		 */
+		public function handle()
+		{
+			$newsUpdaters = app()->tagged('news_updaters');
+
+			foreach ($newsUpdaters as $newsUpdater) {
+				$articles = $newsUpdater->update();
+				$this->saveArticles($articles);
+			}
+		}
+
+		private function saveArticles($articles)
+		{
+			/**
+			 * @var Article $article
+			 * @var ArticlesDTO $articleDto
+			 * @var ArticleCategoriesEnum $articleDto ->category
+			 */
+			foreach ($articles as $articleDto) {
+				$article = Article::firstOrCreate(
+					['uniqueId' => $articleDto->uniqueId],
+					[
+						'uniqueId' => $articleDto->uniqueId,
+						'title' => $articleDto->title,
+						'content' => $articleDto->content,
+						'description' => $articleDto->description,
+						'url' => $articleDto->url,
+						'image' => $articleDto->image,
+						'sourceName' => $articleDto->sourceName,
+						'sourceId' => $articleDto->sourceId,
+						'author' => $articleDto->author,
+						'category' => $articleDto->category->value(),
+						'publishedAt' => \Date::parse($articleDto->publishedAt)->format('Y-m-d H:i:s'),
+					]
+				);
+			}
+		}
+	}
