@@ -37,7 +37,7 @@ The application meets the following requirements:
 
 ## Usage and Examples
 ### Fetch Articles
-**Endpoint**: `GET /api/articles`
+**Endpoint**: `GET /api/articles/search`
 **Parameters**:
 - `category`: Filter by article category.
 - `source`: Filter by news source.
@@ -49,7 +49,7 @@ The application meets the following requirements:
 - `categories`: Filter by article categories.
 - `sources`: Filter by news sources.
 
-**Example Request**: `GET /api/articles?category=business&source=guardian`
+**Example Request**: `GET /api/articles/search?category=business&source=guardian`
 
 **Example Response**:
 ```json
