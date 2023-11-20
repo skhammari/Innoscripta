@@ -2,10 +2,14 @@
 
 	namespace App\Services;
 
+	use App\DTO\ArticlesDTO;
+	use App\Enums\ArticleCategoriesEnum;
+
 	class GuardianService implements NewsUpdaterInterface
 	{
 
 		const URL = 'https://content.guardianapis.com/search';
+
 		public function sendRequest($url, ?array $params)
 		{
 			$apikey = getenv('GUARDIAN_API_KEY');
@@ -23,15 +27,24 @@
 			$articles = $response->json()['response']['results'];
 			$news = [];
 			foreach ($articles as $article) {
-				$news[] = [
-					'title'       => $article['webTitle'],
-					'url'         => $article['webUrl'],
-					'sourceName'  => 'The Guardian',
-					'sourceId'    => $article['id'],
-					'author'      => '',
-					'category'    => $article['sectionName'],
-					'publishedAt' => $article['webPublicationDate'],
-				];
+				try {
+					$category = ArticleCategoriesEnum::from($article['sectionId']);
+				} catch (\ValueError $e) {
+					$category = ArticleCategoriesEnum::GENERAL;
+				}
+
+				$news[] = new ArticlesDTO(
+					$article['webTitle'],
+					'',
+					'',
+					$article['webUrl'],
+					'',
+					'Guardian',
+					$article['id'],
+					'',
+					$article['webPublicationDate'],
+					$category
+				);
 			}
 
 			return $news;
