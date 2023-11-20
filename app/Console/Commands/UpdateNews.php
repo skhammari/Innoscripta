@@ -31,6 +31,8 @@
 			$newsUpdaters = app()->tagged('news_updaters');
 
 			foreach ($newsUpdaters as $newsUpdater) {
+				$this->newLine();
+				$this->info('Updating ' . get_class($newsUpdater) . '...');
 				$articles = $newsUpdater->update();
 				$this->saveArticles($articles);
 			}
@@ -60,6 +62,11 @@
 						'publishedAt' => \Date::parse($articleDto->publishedAt)->format('Y-m-d H:i:s'),
 					]
 				);
+				if ($article->wasRecentlyCreated) {
+					$this->info('Created ' . $article->uniqueId);
+				} else {
+					$this->line('Duplicate article ' . $article->uniqueId);
+				}
 			}
 		}
 	}
