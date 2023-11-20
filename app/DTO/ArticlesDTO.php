@@ -3,6 +3,7 @@
 	namespace App\DTO;
 
 	use App\Enums\ArticleCategoriesEnum;
+	use Str;
 
 	class ArticlesDTO
 	{
@@ -16,6 +17,7 @@
 		public ?string $author;
 		public \DateTime $publishedAt;
 		public ?ArticleCategoriesEnum $category;
+		public string $uniqueId;
 
 		public function __construct(
 			?string $title,
@@ -39,6 +41,7 @@
 			$this->author = $author;
 			$this->publishedAt = new \DateTime($publishedAt);
 			$this->category = $category;
+			$this->uniqueId = $this->generateUniqueId();
 		}
 
 		public function toArray(): array
@@ -54,6 +57,13 @@
 				'author'      => $this->author,
 				'category'    => $this->category,
 				'publishedAt' => $this->publishedAt,
+				'uniqueId'    => $this->uniqueId,
 			];
+		}
+
+		private function generateUniqueId(): string
+		{
+			$title = Str::replace(' ', '', Str::limit($this->title, 50, ''));
+			return $this->sourceName . '-' . $title . '-' . $this->publishedAt->format('Y-m-d H:i:s');
 		}
 	}
