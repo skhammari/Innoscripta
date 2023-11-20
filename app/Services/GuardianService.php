@@ -1,6 +1,6 @@
 <?php
 
-	namespace App\Console\Services;
+	namespace App\Services;
 
 	class GuardianService implements NewsUpdaterInterface
 	{

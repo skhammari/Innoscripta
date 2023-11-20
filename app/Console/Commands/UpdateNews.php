@@ -2,10 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Console\Services\GuardianService;
-use App\Console\Services\NewsAPIService;
-use App\Console\Services\NewsUpdaterInterface;
-use App\Console\Services\NYTimesService;
+use App\Services\NYTimesService;
 use Illuminate\Console\Command;
 
 class UpdateNews extends Command
