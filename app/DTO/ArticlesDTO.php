@@ -3,7 +3,7 @@
 	namespace App\DTO;
 
 	use App\Enums\ArticleCategoriesEnum;
-	use Str;
+	use Illuminate\Support\Str;
 
 	class ArticlesDTO
 	{
