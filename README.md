@@ -28,10 +28,12 @@ The application meets the following requirements:
 
 ## Setup Instructions
 1. Install **Laravel Sail**.
-2. Run `composer install` to install dependencies.
-3. Run `sail artisan key:generate` to set the application key.
-4. Run `sail artisan migrate` to create the database schema.
-5. Run `sail artisan update:news` to fetch initial news data.
+2. run `mv .env.example .env`
+3. get apikey for newsapi and nytimes and guardian.
+4. Run `composer install` to install dependencies. 
+5. Run `sail artisan key:generate` to set the application key. 
+6. Run `sail artisan migrate` to create the database schema. 
+7. Run `sail artisan update:news` to fetch initial news data.
 
 ## Usage and Examples
 ### Fetch Articles
