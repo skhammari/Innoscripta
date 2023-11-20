@@ -2,6 +2,9 @@
 
 	namespace App\Services;
 
+	use App\DTO\ArticlesDTO;
+	use App\Enums\ArticleCategoriesEnum;
+
 	class NYTimesService implements NewsUpdaterInterface
 	{
 
@@ -21,17 +24,24 @@
 			$articles = $response->json()['results'];
 			$news = [];
 			foreach ($articles as $article) {
-				$news[] = [
-					'title'       => $article['title'],
-					'content'     => $article['abstract'],
-					'description' => $article['abstract'],
-					'url'         => $article['url'],
-					'image'       => $article['multimedia'][0]['url']??'',
-					'sourceName'  => $article['source'],
-					'sourceId'    => $article['source'],
-					'author'      => $article['byline'],
-					'publishedAt' => $article['published_date'],
-				];
+				try {
+					$category = ArticleCategoriesEnum::from($article['section']);
+				} catch (\ValueError $e) {
+					$category = ArticleCategoriesEnum::GENERAL;
+				}
+
+				$news[] = new ArticlesDTO(
+					$article['title'],
+					$article['abstract'],
+					$article['abstract'],
+					$article['url'],
+					$article['multimedia'][0]['url']??'',
+					$article['source'],
+					$article['source'],
+					$article['byline'],
+					$article['published_date'],
+					$category
+				);
 			}
 
 			return $news;

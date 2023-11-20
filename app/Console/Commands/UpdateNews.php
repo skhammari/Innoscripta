@@ -26,7 +26,7 @@ class UpdateNews extends Command
     /**
      * Execute the console command.
      */
-    public function handle(GuardianService $newsUpdater)
+    public function handle(NYTimesService $newsUpdater)
     {
 		$news = $newsUpdater->update();
 		dd($news);
