@@ -2,6 +2,7 @@
 
 	namespace App\Http\Controllers;
 
+	use App\Http\Requests\ArticleSearchRequest;
 	use App\Http\Resources\ArticleCollection;
 	use App\Models\Article;
 	use Illuminate\Http\Request;
@@ -15,7 +16,7 @@
 			return new ArticleCollection($allArticles);
 		}
 
-		public function search(Request $request)
+		public function search(ArticleSearchRequest $request)
 		{
 			$articleQuery = Article::query();
 
